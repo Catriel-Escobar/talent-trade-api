@@ -26,11 +26,12 @@ initializePassport();
 app.use(passport.initialize());
 
 app.use(urlencoded({ extended: true }));
-app.use("/", router);
 
 app.get("/greeting", (req: Request, res: Response) => {
   res.send({ Greet: "Hello" });
 });
+
+app.use("/", router);
 
 connectDB();
 
