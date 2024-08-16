@@ -7,7 +7,8 @@
     "dev": "tsnd --respawn src/index.ts",
     "dev:api": "tsnd --respawn src/index.ts --api",
     "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/index.js"
+    "start": "npm run build && node dist/index.js",
+    "start:prod": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +32,7 @@
   },
   "dependencies": {
     "@types/passport-google-oauth2": "^0.1.8",
+    "back-tt": "file:",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.3.0",
     "cookie-parser": "^1.4.6",
