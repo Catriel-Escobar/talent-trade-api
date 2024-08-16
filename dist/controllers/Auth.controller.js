@@ -24,8 +24,10 @@ class AuthController {
                 }
                 else {
                     res.cookie("token", result.token, {
-                        httpOnly: true,
+                        httpOnly: false,
                         maxAge: 1000 * 60 * 60 * 24,
+                        sameSite: "none",
+                        secure: true,
                     });
                     res.status(200).send({
                         status: "success",
@@ -42,7 +44,10 @@ class AuthController {
         });
         this.logout = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             try {
-                res.clearCookie("token");
+                res.clearCookie("token", {
+                    domain: "talent-trade-api.vercel.app",
+                    path: "/",
+                });
                 res.status(200).send({
                     status: "success",
                     payload: "Logout success.",
@@ -116,9 +121,11 @@ class AuthController {
                     throw new AuthorizationError_1.AuthorizationError("Error with google user");
                 }
                 const result = yield this.authService.loginGoogle(user.email);
-                res.cookie("token", result.payload, {
-                    httpOnly: true,
+                res.cookie("token", result.token, {
+                    httpOnly: false,
                     maxAge: 1000 * 60 * 60 * 24,
+                    sameSite: "none",
+                    secure: true,
                 });
                 res.send({
                     status: "success",

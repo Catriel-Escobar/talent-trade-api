@@ -5,6 +5,8 @@ import { LoginType } from "../utils/schema/auth.schema";
 import { InternalServerError } from "../utils/errors/InternalServerError";
 import { AuthorizationError } from "../utils/errors/AuthorizationError";
 
+type SameSite = "strict" | "lax" | "none";
+
 export class AuthController {
   private authService: AuthService;
   constructor(authService: AuthService) {
@@ -22,8 +24,10 @@ export class AuthController {
         res.status(400).send(result);
       } else {
         res.cookie("token", result.token, {
-          httpOnly: true,
+          httpOnly: false,
           maxAge: 1000 * 60 * 60 * 24,
+          sameSite: "none" as SameSite,
+          secure: true,
         });
         res.status(200).send({
           status: "success",
@@ -41,7 +45,10 @@ export class AuthController {
 
   logout = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.clearCookie("token");
+      res.clearCookie("token", {
+        domain: "talent-trade-api.vercel.app",
+        path: "/",
+      });
       res.status(200).send({
         status: "success",
         payload: "Logout success.",
@@ -121,9 +128,11 @@ export class AuthController {
 
       const result = await this.authService.loginGoogle(user.email);
 
-      res.cookie("token", result.payload, {
-        httpOnly: true,
+      res.cookie("token", result.token, {
+        httpOnly: false,
         maxAge: 1000 * 60 * 60 * 24,
+        sameSite: "none" as SameSite,
+        secure: true,
       });
       res.send({
         status: "success",
