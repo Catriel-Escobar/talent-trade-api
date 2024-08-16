@@ -11,7 +11,6 @@ import { initializePassport } from "./config/passport/passport.config";
 import router from "./routes/index.routes";
 
 import { envs } from "./config/envs/env.config";
-import { addCategories, categories } from "./seed/categorias";
 
 const app = express();
 
@@ -26,8 +25,12 @@ app.use(express.json());
 initializePassport();
 app.use(passport.initialize());
 
-app.use(express.urlencoded({ extended: true }));
+app.use(urlencoded({ extended: true }));
 app.use("/", router);
+
+app.get("/greeting", (req: Request, res: Response) => {
+  res.send({ Greet: "Hello" });
+});
 
 connectDB();
 
